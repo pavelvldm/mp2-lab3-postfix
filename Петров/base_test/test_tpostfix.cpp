@@ -6,17 +6,33 @@ TEST(TPostfix, can_create_postfix)
   ASSERT_NO_THROW(TPostfix p);
 }
 
-TEST(TPostfix, can_convert_to_postfix_1)
+TEST(TPostfix, can_create_postfix_copy)
 {
-	TPostfix Check("a+b*c");
+	TPostfix Check("a + b*c / (e-f)");
 
-	EXPECT_EQ("abc*+", Check.ToPostfix());
+	EXPECT_EQ("a + b*c / (e-f)", Check.GetInfix());
 }
 
-TEST(TPostfix, can_convert_to_postfix_2)
+TEST(TPostfix, can_convert_to_postfix)
 {
-	TPostfix Check("a+b-c*d");
+	string Expect = "abc*+";
 
-	EXPECT_EQ("abcd*-+", Check.ToPostfix());
+	TPostfix Check("a + b*c");
+
+	string Result;
+	Result = Check.ToPostfix();
+
+	EXPECT_EQ(Expect, Result);
 }
+
+/* TEST(TPostfix, can_calculate_postfix)
+{
+	TPostfix Check("a + b*c / (e-f)");
+
+	Check.ToPostfix();
+	double Result = Check.Calculate();
+
+	EXPECT_EQ(7 , Result);
+} */
+
 

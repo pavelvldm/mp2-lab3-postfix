@@ -60,8 +60,8 @@ bool CheckString(const string &s)
 
 string TPostfix::ToPostfix()
 {
-	TStack<char> operation(10);
-	TStack<int> priority(10);
+	TStack<char> operation(MaxStackSize);
+	TStack<int> priority(MaxStackSize);
 
 	for (int i = 0; i < infix.size(); i++)
 	{
@@ -154,6 +154,7 @@ string TPostfix::ToPostfix()
 
 						continue;
 					}
+					else continue;
 				}
 				else
 					priority.push(pr);
@@ -175,7 +176,8 @@ string TPostfix::ToPostfix()
 				postfix += operation.pop();
 			}
 
-			operation.pop();
+			if (!operation.empty())
+				operation.pop();
 		}
 	}
 
@@ -191,5 +193,68 @@ string TPostfix::ToPostfix()
 
 double TPostfix::Calculate()
 {
-  return 0;
+	if (!postfix.size())
+		throw exception("Wrong postfix");
+
+	double Result = 0;
+	TStack<double> Value(MaxStackSize);
+
+	for (int i = 0; i < postfix.size(); i++)
+	{
+		if (IsOperand(postfix[i]))
+		{
+			double temp;
+			cout << "Insert " << postfix[i] << " : ";
+			cin >> temp;
+			Value.push(temp);
+
+			continue;
+		}
+
+		if (IsOperator(postfix[i]))
+		{
+			if (postfix[i] == '+')
+			{
+				double a = Value.pop();
+				double b = Value.pop();
+
+				b = b + a;
+
+				Value.push(b);
+			}
+
+			if (postfix[i] == '-')
+			{
+				double a = Value.pop();
+				double b = Value.pop();
+
+				b = b - a;
+
+				Value.push(b);
+			}
+
+			if (postfix[i] == '*')
+			{
+				double a = Value.pop();
+				double b = Value.pop();
+
+				b = b * a;
+
+				Value.push(b);
+			}
+
+			if (postfix[i] == '/')
+			{
+				double a = Value.pop();
+				double b = Value.pop();
+
+				b = b / a;
+
+				Value.push(b);
+			}
+		}
+	}
+
+	Result = Value.pop();
+	return Result;
 }
