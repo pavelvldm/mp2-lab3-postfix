@@ -11,7 +11,7 @@ int main()
 
   setlocale(LC_ALL, "Russian");
   cout << "Введите арифметическое выражение: ";
-  cin >> expression;
+  getline(cin, expression);								// Чтобы можно было вводить с пробелами
   cout << expression << endl;
 
   TPostfix Example(expression);

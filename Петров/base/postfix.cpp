@@ -15,6 +15,16 @@ bool IsOperand(const char &opd)
 	return false;
 }
 
+bool IsNumber(const char &opd)
+{
+	const string numbers = "0123456789";
+
+	if (numbers.find(opd) != string::npos)
+		return true;
+
+	return false;
+}
+
 int IsOperator(const char &op)
 {
 	const string operPr1 = "+-";
@@ -65,7 +75,15 @@ string TPostfix::ToPostfix()
 
 	for (int i = 0; i < infix.size(); i++)
 	{
+		// Если операнд - буква
 		if (IsOperand(infix[i]))
+		{
+			postfix += infix[i];
+			continue;
+		}
+
+		// Если операнд - цифра
+		if (IsNumber(infix[i]))
 		{
 			postfix += infix[i];
 			continue;
@@ -209,6 +227,43 @@ double TPostfix::Calculate()
 			Value.push(temp);
 
 			continue;
+		}
+
+		if (IsNumber(postfix[i]))
+		{
+			switch (postfix[i])
+			{
+			case '0':
+				Value.push(0);
+				break;
+			case '1':
+				Value.push(1);
+				break;
+			case '2':
+				Value.push(2);
+				break;
+			case '3':
+				Value.push(3);
+				break;
+			case '4':
+				Value.push(4);
+				break;
+			case '5':
+				Value.push(5);
+				break;
+			case '6':
+				Value.push(6);
+				break;
+			case '7':
+				Value.push(7);
+				break;
+			case '8':
+				Value.push(8);
+				break;
+			case '9':
+				Value.push(9);
+				break;
+			}
 		}
 
 		if (IsOperator(postfix[i]))
