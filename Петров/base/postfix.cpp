@@ -47,22 +47,52 @@ bool CheckString(const string &s)
 	if (s.find("()") != string::npos)
 		return false;
 
-	if (s.find("((") != string::npos)
+	if (s.find("++") != string::npos)
 		return false;
 
-	if (s.find("))") != string::npos)
+	if (s.find("+-") != string::npos)
 		return false;
 
-	if (s.find("++") || s.find("+-") || s.find("+*") || s.find("+/"))
+	if (s.find("+*") != string::npos)
 		return false;
 
-	if (s.find("-+") || s.find("--") || s.find("-*") || s.find("-/"))
+	if (s.find("+/") != string::npos)
 		return false;
 
-	if (s.find("*+") || s.find("*-") || s.find("**") || s.find("*/"))
+	if (s.find("-+") != string::npos)
 		return false;
 
-	if (s.find("/+") || s.find("/-") || s.find("/*") || s.find("//"))
+	if (s.find("--") != string::npos)
+		return false;
+
+	if (s.find("-*") != string::npos)
+		return false;
+
+	if (s.find("-/") != string::npos)
+		return false;
+
+	if (s.find("*+") != string::npos)
+		return false;
+
+	if (s.find("*-") != string::npos)
+		return false;
+
+	if (s.find("**") != string::npos)
+		return false;
+
+	if (s.find("*/") != string::npos)
+		return false;
+
+	if (s.find("/+") != string::npos)
+		return false;
+
+	if (s.find("/-") != string::npos)
+		return false;
+
+	if (s.find("/*") != string::npos)
+		return false;
+
+	if (s.find("//") != string::npos)
 		return false;
 
 	return true;
@@ -72,6 +102,9 @@ string TPostfix::ToPostfix()
 {
 	TStack<char> operation(MaxStackSize);
 	TStack<int> priority(MaxStackSize);
+
+	if (!CheckString(infix))
+		throw exception("Wrong string");
 
 	for (int i = 0; i < infix.size(); i++)
 	{

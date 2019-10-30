@@ -16,7 +16,6 @@ TEST(TStack, cant_create_too_large_stack)
 	ASSERT_ANY_THROW(TStack<int> st(MaxStackSize + 1));
 }
 
-
 TEST(TStack, created_stack_is_empty)
 {
 	TStack<int> testStack(3);
