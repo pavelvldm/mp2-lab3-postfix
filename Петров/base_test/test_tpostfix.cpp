@@ -3,7 +3,15 @@
 
 TEST(TPostfix, can_create_postfix)
 {
-  ASSERT_NO_THROW(TPostfix p);
+  ASSERT_NO_THROW(TPostfix Check);
+}
+
+TEST(TPostfix, created_postfix_is_empty)
+{
+	TPostfix Check;
+
+	EXPECT_EQ("", Check.GetInfix());
+	EXPECT_EQ("", Check.GetPostfix());
 }
 
 TEST(TPostfix, can_create_copied_postfix)
@@ -11,6 +19,13 @@ TEST(TPostfix, can_create_copied_postfix)
 	TPostfix Check("a + b*c / (e-f)");
 
 	EXPECT_EQ("a + b*c / (e-f)", Check.GetInfix());
+	EXPECT_EQ("", Check.GetPostfix());
+}
+
+TEST(TPostfix, throws_when_convert_empty_infix)
+{
+	TPostfix Check;
+	ASSERT_ANY_THROW(Check.ToPostfix());
 }
 
 TEST(TPostfix, can_convert_to_postfix_1)
@@ -26,7 +41,7 @@ TEST(TPostfix, can_convert_to_postfix_1)
 
 TEST(TPostfix, can_convert_to_postfix_2)
 {
-	string Expect = "abcd*-+";
+	string Expect = "ab+cd*-";
 	TPostfix Check("a + b - c * d");
 
 	string Result;
@@ -68,6 +83,21 @@ TEST(TPostfix, can_calculate_postfix)
 	double Result = Check.Calculate();
 
 	EXPECT_EQ(4 , Result);
+}
+
+TEST(TPostfix, throws_when_there_is_no_operator)
+{
+	TPostfix Check("12345");
+	Check.ToPostfix();
+
+	ASSERT_ANY_THROW(Check.Calculate());
+}
+
+TEST(TPostfix, throws_when_there_is_no_operand)
+{
+	TPostfix Check("+");
+
+	ASSERT_ANY_THROW(Check.Calculate());
 }
 
 

@@ -13,8 +13,8 @@ class TPostfix
 public:
 	TPostfix()
 	{
-		infix = '\0';
-		postfix = '\0';
+		infix = "";
+		postfix = "";
 	}
 
   TPostfix(const string &s)

@@ -37,7 +37,7 @@ public:
 
 	bool full()
 	{
-		return top == size;
+		return top == size - 1;
 	}
 
 	void push(T el)

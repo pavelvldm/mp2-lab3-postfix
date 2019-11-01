@@ -23,6 +23,13 @@ TEST(TStack, created_stack_is_empty)
 	EXPECT_EQ(true, testStack.empty());
 }
 
+TEST(TStack, throws_when_pop_from_empty)
+{
+	TStack<int> testStack(3);
+
+	ASSERT_ANY_THROW(testStack.pop());
+}
+
 TEST(TStack, can_push_element)
 {
 	TStack<int> testStack(3);
@@ -43,8 +50,20 @@ TEST(TStack, can_pop_element)
 	EXPECT_EQ(elem, testStack.pop());
 }
 
-TEST(TStack, cant_get_element_when_stack_is_empty)
+TEST(TStack, stack_is_really_full)
+{
+	TStack<int> testStack(1);
+	testStack.push(1);
+
+	EXPECT_EQ(true, testStack.full());
+}
+
+TEST(TStack, throws_when_push_full_stack)
 {
 	TStack<int> testStack(3);
-	ASSERT_ANY_THROW(testStack.pop());
+	testStack.push(1);
+	testStack.push(1);
+	testStack.push(1);
+
+	ASSERT_ANY_THROW(testStack.push(1));
 }

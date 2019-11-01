@@ -44,6 +44,9 @@ bool CheckString(const string &s)
 	if (s.size() == 0)
 		return false;
 
+	if (s == "")
+		return false;
+
 	if (s.find("()") != string::npos)
 		return false;
 
@@ -96,6 +99,14 @@ bool CheckString(const string &s)
 		return false;
 
 	return true;
+}
+
+int IsThere(char &el, vector<char> &v)
+{
+	for (int i = 0; i < v.size(); i++)
+		if (v[i] == el)
+			return i;
+	return -1;
 }
 
 string TPostfix::ToPostfix()
@@ -158,7 +169,7 @@ string TPostfix::ToPostfix()
 				pr = priority.pop();
 
 				// Если приоритет операции выше операции в вершине стека, новая операция в стек
-				if ((pr != 0) && (OpPr >= pr))
+				if ((pr != 0) && (OpPr > pr))
 				{
 					priority.push(pr);
 					priority.push(OpPr);
@@ -172,7 +183,7 @@ string TPostfix::ToPostfix()
 				pr = priority.pop();
 
 				// Если приоритет операции меньше или равен, вытаскиваем операции из стека, новую кладём в стек
-				if ((pr != 0) && (OpPr < pr))
+				if ((pr != 0) && (OpPr <= pr))
 				{
 					while (pr >= OpPr)
 					{
@@ -250,18 +261,34 @@ double TPostfix::Calculate()
 	double Result = 0;
 	TStack<double> Value(MaxStackSize);
 
+	vector<char> Operand(MaxStackSize);
+	vector<double> Values(MaxStackSize);
+
 	for (int i = 0; i < postfix.size(); i++)
 	{
 		if (IsOperand(postfix[i]))
 		{
-			double temp;
-			cout << "Insert " << postfix[i] << " : ";
-			cin >> temp;
-			Value.push(temp);
+			if (IsThere(postfix[i], Operand) > -1)
+			{
+				int index = IsThere(postfix[i], Operand);
+				Value.push(Values[index]);
 
-			continue;
+				continue;
+			}
+			else
+			{
+				double temp;
+				cout << "Insert " << postfix[i] << " : ";
+				cin >> temp;
+				Value.push(temp);
+
+				Operand[i] = postfix[i];
+				Values[i] = temp;
+
+				continue;
+			}
 		}
-
+		
 		if (IsNumber(postfix[i]))
 		{
 			switch (postfix[i])
@@ -303,7 +330,17 @@ double TPostfix::Calculate()
 		{
 			if (postfix[i] == '+')
 			{
+				if (Value.empty())
+					throw exception("No values");
+
 				double a = Value.pop();
+
+				if (Value.empty())
+				{
+					Value.push(a);
+					continue;
+				}
+
 				double b = Value.pop();
 
 				b = b + a;
@@ -313,7 +350,18 @@ double TPostfix::Calculate()
 
 			if (postfix[i] == '-')
 			{
+				if (Value.empty())
+					throw exception("No values");
+
 				double a = Value.pop();
+
+				if (Value.empty())
+				{
+					a = -1 * a;
+					Value.push(a);
+					continue;
+				}
+
 				double b = Value.pop();
 
 				b = b - a;
@@ -323,6 +371,9 @@ double TPostfix::Calculate()
 
 			if (postfix[i] == '*')
 			{
+				if (Value.empty())
+					throw exception("No values");
+
 				double a = Value.pop();
 				double b = Value.pop();
 
@@ -333,6 +384,9 @@ double TPostfix::Calculate()
 
 			if (postfix[i] == '/')
 			{
+				if (Value.empty())
+					throw exception("No values");
+
 				double a = Value.pop();
 				double b = Value.pop();
 
@@ -343,6 +397,14 @@ double TPostfix::Calculate()
 		}
 	}
 
-	Result = Value.pop();
-	return Result;
+	if (Value.empty())
+		throw exception("No values");
+	else
+	{
+		Result = Value.pop();
+		if (Value.empty())
+			return Result;
+		else
+			throw exception("No operators");
+	}
 }
